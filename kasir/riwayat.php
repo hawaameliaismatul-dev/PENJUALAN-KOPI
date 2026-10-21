@@ -18,44 +18,47 @@ $query = mysqli_query($koneksi, "
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Riwayat Penjualan</title>
+    <title>Riwayat Penjualan - KopiKita</title>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css">
 
     <style>
-
         body {
-            background-color: #f6f3f1;
+            background: #f6f3f1;
         }
 
         .navbar {
-            background-color: #4b2e1f;
+            background: #4b2e1f;
+        }
+
+        .navbar-brand,
+        .navbar-text {
+            color: white !important;
         }
 
         .sidebar {
-            min-height: 100vh;
-            background-color: white;
-            padding: 20px;
+            min-height: calc(100vh - 56px);
+            background: white;
+            border-right: 1px solid #ddd;
+            padding: 20px 10px;
         }
 
         .sidebar a {
             display: block;
-            text-decoration: none;
-            color: #4b2e1f;
-            padding: 10px;
+            padding: 10px 15px;
             margin-bottom: 5px;
-            border-radius: 5px;
+            color: #4b2e1f;
+            text-decoration: none;
+            border-radius: 7px;
         }
 
         .sidebar a:hover,
-        .sidebar .active {
-            background-color: #4b2e1f;
+        .sidebar a.active {
+            background: #4b2e1f;
             color: white;
         }
 
@@ -63,61 +66,51 @@ $query = mysqli_query($koneksi, "
             padding: 30px;
         }
 
-        .table thead {
-            background-color: #4b2e1f;
-            color: white;
-        }
-
         .btn-brown {
-            background-color: #4b2e1f;
+            background: #4b2e1f;
             color: white;
         }
 
         .btn-brown:hover {
-            background-color: #3a2217;
+            background: #6b4430;
             color: white;
         }
 
+        .table thead th {
+            background: #4b2e1f;
+            color: white;
+        }
     </style>
-
 </head>
 
 <body>
 
 <!-- NAVBAR -->
+<nav class="navbar">
+    <div class="container-fluid px-4">
 
-<nav class="navbar navbar-dark">
-
-    <div class="container-fluid">
-
-        <span class="navbar-brand">
-            Sistem Penjualan Kopi
+        <span class="navbar-brand fw-bold">
+            KopiKita
         </span>
 
-        <span class="text-white">
-            Kasir:
-            <?= htmlspecialchars($_SESSION['nama']); ?>
+        <span class="navbar-text">
+            <?= htmlspecialchars($_SESSION['nama']); ?> | Kasir
         </span>
 
     </div>
-
 </nav>
 
-
 <div class="container-fluid">
-
     <div class="row">
 
-
         <!-- SIDEBAR -->
-
         <div class="col-md-2 sidebar">
 
             <a href="dashboard.php">
                 Dashboard
             </a>
 
-            <a href="transaksi.php" class="active">
+            <a href="transaksi.php">
                 Transaksi
             </a>
 
@@ -125,72 +118,66 @@ $query = mysqli_query($koneksi, "
                 Data Pelanggan
             </a>
 
-            <a href="riwayat.php">
+            <a href="riwayat.php" class="active">
                 Riwayat Penjualan
             </a>
 
             <a href="../logout.php"
-            onclick="return confirm('Yakin ingin logout?')">
+               onclick="return confirm('Yakin ingin logout?')">
                 Logout
             </a>
 
         </div>
 
         <!-- CONTENT -->
-
         <div class="col-md-10 content">
 
             <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <h3>
-                    Riwayat Penjualan
-                </h3>
+                <div>
+                    <h3 class="fw-bold mb-1" style="color: #4b2e1f;">
+                        Riwayat Penjualan
+                    </h3>
 
-                <a href="transaksi.php"
-                   class="btn btn-brown">
+                    <p class="text-muted mb-0">
+                        Daftar transaksi penjualan KopiKita.
+                    </p>
+                </div>
+
+                <a href="transaksi.php" class="btn btn-brown">
                     + Transaksi Baru
                 </a>
 
             </div>
 
-
-            <div class="card shadow-sm">
-
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
 
                     <div class="table-responsive">
 
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover align-middle">
 
                             <thead>
-
                                 <tr>
-
                                     <th>No</th>
                                     <th>Tanggal</th>
                                     <th>Pelanggan</th>
                                     <th>Total</th>
                                     <th>Aksi</th>
-
                                 </tr>
-
                             </thead>
 
                             <tbody>
 
                             <?php
-
                             $no = 1;
 
-                            while ($data = mysqli_fetch_assoc($query)) {
-
+                            if (mysqli_num_rows($query) > 0) {
+                                while ($data = mysqli_fetch_assoc($query)) {
                             ?>
 
                                 <tr>
-
-                                    <td>
-                                        <?= $no++; ?>
-                                    </td>
+                                    <td><?= $no++; ?></td>
 
                                     <td>
                                         <?= date(
@@ -200,58 +187,41 @@ $query = mysqli_query($koneksi, "
                                     </td>
 
                                     <td>
-
-                                        <?php
-
-                                        if ($data['nama_pelanggan']) {
-
-                                            echo htmlspecialchars(
-                                                $data['nama_pelanggan']
-                                            );
-
-                                        } else {
-
-                                            echo "Umum";
-
-                                        }
-
-                                        ?>
-
+                                        <?= htmlspecialchars(
+                                            $data['nama_pelanggan'] ?? 'Umum'
+                                        ); ?>
                                     </td>
 
                                     <td>
-
-                                        Rp
-                                        <?= number_format(
+                                        Rp <?= number_format(
                                             $data['total_harga'],
                                             0,
                                             ',',
                                             '.'
                                         ); ?>
-
                                     </td>
 
                                     <td>
-
-                                        <!-- TOMBOL CETAK -->
-
                                         <a href="cetak_struk.php?id=<?= $data['id_penjualan']; ?>"
                                            target="_blank"
                                            class="btn btn-sm btn-brown">
-
                                             Cetak Struk
-
                                         </a>
-
                                     </td>
-
                                 </tr>
 
                             <?php
-
-                            }
-
+                                }
+                            } else {
                             ?>
+
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                        Belum ada riwayat penjualan.
+                                    </td>
+                                </tr>
+
+                            <?php } ?>
 
                             </tbody>
 
@@ -260,18 +230,14 @@ $query = mysqli_query($koneksi, "
                     </div>
 
                 </div>
-
             </div>
 
         </div>
 
     </div>
-
 </div>
-
 
 <script src="../js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>

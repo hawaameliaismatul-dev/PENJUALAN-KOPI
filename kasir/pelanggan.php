@@ -16,37 +16,43 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Data Pelanggan</title>
+    <title>Data Pelanggan - KopiKita</title>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css">
 
     <style>
         body {
-            background-color: #f6f3f1;
+            background: #f6f3f1;
         }
 
         .navbar {
-            background-color: #4b2e1f;
+            background: #4b2e1f;
+        }
+
+        .navbar-brand,
+        .navbar-text {
+            color: white !important;
         }
 
         .sidebar {
-            min-height: 100vh;
-            background-color: white;
-            padding: 20px;
+            min-height: calc(100vh - 56px);
+            background: white;
+            border-right: 1px solid #ddd;
+            padding: 20px 10px;
         }
 
         .sidebar a {
             display: block;
-            text-decoration: none;
-            color: #4b2e1f;
-            padding: 10px;
+            padding: 10px 15px;
             margin-bottom: 5px;
-            border-radius: 5px;
+            color: #4b2e1f;
+            text-decoration: none;
+            border-radius: 7px;
         }
 
         .sidebar a:hover,
-        .sidebar .active {
-            background-color: #4b2e1f;
+        .sidebar a.active {
+            background: #4b2e1f;
             color: white;
         }
 
@@ -54,18 +60,18 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
             padding: 30px;
         }
 
-        .table thead {
-            background-color: #4b2e1f;
-            color: white;
-        }
-
         .btn-brown {
-            background-color: #4b2e1f;
+            background: #4b2e1f;
             color: white;
         }
 
         .btn-brown:hover {
-            background-color: #3a2217;
+            background: #6b4430;
+            color: white;
+        }
+
+        .table thead th {
+            background: #4b2e1f;
             color: white;
         }
     </style>
@@ -74,7 +80,6 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
 <body>
 
 <nav class="navbar">
-
     <div class="container-fluid px-4">
 
         <span class="navbar-brand fw-bold">
@@ -86,17 +91,13 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
         </span>
 
     </div>
-
 </nav>
 
 <div class="container-fluid">
-
     <div class="row">
 
         <!-- SIDEBAR -->
         <div class="col-md-2 sidebar">
-
-            <h5 class="mb-4">Menu Kasir</h5>
 
             <a href="dashboard.php">
                 Dashboard
@@ -114,7 +115,8 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
                 Riwayat Penjualan
             </a>
 
-            <a href="../logout.php">
+            <a href="../logout.php"
+               onclick="return confirm('Yakin ingin logout?')">
                 Logout
             </a>
 
@@ -125,7 +127,15 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
 
             <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <h3>Data Pelanggan</h3>
+                <div>
+                    <h3 class="fw-bold mb-1" style="color: #4b2e1f;">
+                        Data Pelanggan
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Kelola data pelanggan KopiKita.
+                    </p>
+                </div>
 
                 <a href="pelanggan_tambah.php" class="btn btn-brown">
                     + Tambah Pelanggan
@@ -133,16 +143,14 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
 
             </div>
 
-            <div class="card shadow-sm">
-
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
 
                     <div class="table-responsive">
 
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover align-middle">
 
                             <thead>
-
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Pelanggan</th>
@@ -150,7 +158,6 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
                                     <th>No. Telepon</th>
                                     <th>Aksi</th>
                                 </tr>
-
                             </thead>
 
                             <tbody>
@@ -158,11 +165,11 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
                             <?php
                             $no = 1;
 
-                            while ($data = mysqli_fetch_assoc($query)) {
+                            if (mysqli_num_rows($query) > 0) {
+                                while ($data = mysqli_fetch_assoc($query)) {
                             ?>
 
                                 <tr>
-
                                     <td><?= $no++; ?></td>
 
                                     <td>
@@ -178,7 +185,6 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
                                     </td>
 
                                     <td>
-
                                         <a href="pelanggan_edit.php?id=<?= $data['id_pelanggan']; ?>"
                                            class="btn btn-sm btn-warning">
                                             Edit
@@ -189,9 +195,18 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
                                            onclick="return confirm('Yakin ingin menghapus pelanggan ini?')">
                                             Hapus
                                         </a>
-
                                     </td>
+                                </tr>
 
+                            <?php
+                                }
+                            } else {
+                            ?>
+
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                        Belum ada data pelanggan.
+                                    </td>
                                 </tr>
 
                             <?php } ?>
@@ -203,13 +218,11 @@ $query = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY id_pelanggan D
                     </div>
 
                 </div>
-
             </div>
 
         </div>
 
     </div>
-
 </div>
 
 <script src="../js/bootstrap.bundle.min.js"></script>
